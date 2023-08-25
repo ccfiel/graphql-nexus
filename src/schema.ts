@@ -11,6 +11,7 @@ import {
 } from 'nexus'
 import { DateTimeResolver } from 'graphql-scalars'
 import { Context } from './context'
+import * as types from "./graphql";
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 
@@ -282,18 +283,7 @@ const UserCreateInput = inputObjectType({
 })
 
 export const schema = makeSchema({
-  types: [
-    Query,
-    Mutation,
-    Post,
-    User,
-    UserUniqueInput,
-    UserCreateInput,
-    PostCreateInput,
-    SortOrder,
-    PostOrderByUpdatedAtInput,
-    DateTime,
-  ],
+  types,
   outputs: {
     schema: __dirname + '/../schema.graphql',
     typegen: __dirname + '/generated/nexus.ts',

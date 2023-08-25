@@ -2,65 +2,117 @@
 ### Do not make changes to this file directly
 
 
+type Analytics {
+  cashBalances: [AnalyticsCashBalances]
+  firebaseId: String
+  id: String
+  items: [AnalyticsItems]
+  payments: [AnalyticsPayments]
+  shiftees: [AnalyticsShiftees]
+  sourceData: String
+  timeEntries: [AnalyticsTimeEntries]
+  transactions: Int
+  userId: String
+}
+
+type AnalyticsCashBalances {
+  amount: String
+  balance: String
+  comment: String
+  createdAt: JSON
+  customer: String
+  posName: String
+  shiftee: String
+  type: String
+}
+
+type AnalyticsItems {
+  addOnsList: [AnalyticsItemsAddOnsList]
+  addOnsPrice: JSON
+  amount: JSON
+  cashier: String
+  cashierId: String
+  createdAt: JSON
+  discount: JSON
+  hasSeniorPwd: Boolean
+  id: Int
+  item: String
+  itemId: String
+  parentItem: String
+  posName: String
+  qty: JSON
+  rate: JSON
+  refId: String
+  refund: Boolean
+  tax: JSON
+}
+
+type AnalyticsItemsAddOnsList {
+  baseQty: Int
+  cost: JSON
+  id: String
+  itemId: String
+  key: String
+  managedStocks: Boolean
+  name: String
+  price: JSON
+  qty: Int
+  rate: JSON
+  sortId: Int
+  unit: String
+}
+
+type AnalyticsPayments {
+  addedTax: Int
+  amount: JSON
+  amountBalance: JSON
+  amountDue: JSON
+  amountReceived: JSON
+  cashier: String
+  cashierId: String
+  createdAt: JSON
+  customerDiscount: Int
+  diningOptionFee: JSON
+  discounts: JSON
+  includedTax: JSON
+  paymentMode: String
+  payments: [AnalyticsPaymentsPayments]
+  posName: String
+  refId: String
+  refund: Boolean
+  seniorPwdDiscount: JSON
+  serviceFee: JSON
+  vatAmount: JSON
+}
+
+type AnalyticsPaymentsPayments {
+  amount: Int
+  name: String
+  paymentType: String
+  refNo: String
+}
+
+type AnalyticsShiftees {
+  endShift: JSON
+  posName: String
+  sales: JSON
+  shiftee: String
+  startShift: JSON
+}
+
+type AnalyticsTimeEntries {
+  datetime: JSON
+  employeeId: String
+  isTimeIn: Boolean
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar DateTime
 
-type Mutation {
-  createDraft(authorEmail: String!, data: PostCreateInput!): Post
-  deletePost(id: Int!): Post
-  incrementPostViewCount(id: Int!): Post
-  signupUser(data: UserCreateInput!): User!
-  togglePublishPost(id: Int!): Post
-}
-
-type Post {
-  author: User
-  content: String
-  createdAt: DateTime!
-  id: Int!
-  published: Boolean!
-  title: String!
-  updatedAt: DateTime!
-  viewCount: Int!
-}
-
-input PostCreateInput {
-  content: String
-  title: String!
-}
-
-input PostOrderByUpdatedAtInput {
-  updatedAt: SortOrder!
-}
+scalar JSON
 
 type Query {
-  allUsers: [User!]!
-  draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
-  feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
-  postById(id: Int): Post
-}
-
-enum SortOrder {
-  asc
-  desc
-}
-
-type User {
-  email: String!
-  id: Int!
-  name: String
-  posts: [Post!]!
-}
-
-input UserCreateInput {
-  email: String!
-  name: String
-  posts: [PostCreateInput!]
-}
-
-input UserUniqueInput {
-  email: String
-  id: Int
+  analyticsByUserId(date: String, userId: String): Analytics
 }

@@ -3,25 +3,112 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+model analytics {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  firebaseId   String
+  userId       String
+  cashBalances AnalyticsCashBalances[]
+  items        AnalyticsItems[]
+  payments     AnalyticsPayments[]
+  shiftees     AnalyticsShiftees[]
+  timeEntries  AnalyticsTimeEntries[]
+  sourceData   String
+  transactions Int?
+
+  @@index([firebaseId, userId], map: "firebaseId_1_userId_1")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  viewCount Int      @default(0)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+type AnalyticsCashBalances {
+  amount    String?
+  balance   String?
+  comment   String?
+  createdAt DateTime @db.Date
+  customer  String?
+  posName   String?
+  shiftee   String?
+  type      String?
+}
+
+type AnalyticsItems {
+  addOnsList   AnalyticsItemsAddOnsList[]
+  addOnsPrice  Json
+  amount       Json
+  cashier      String
+  cashierId    String
+  createdAt    Json
+  discount     Json
+  hasSeniorPwd Boolean?
+  id           Int?
+  item         String?
+  itemId       String?
+  parentItem   String?
+  posName      String?
+  qty          Json
+  rate         Json
+  refId        String
+  refund       Boolean
+  tax          Json?
+}
+
+type AnalyticsItemsAddOnsList {
+  baseQty       Int
+  cost          Json?
+  id            String
+  itemId        String?
+  key           String?
+  managedStocks Boolean?
+  name          String
+  price         Json
+  qty           Int
+  rate          Json
+  sortId        Int?
+  unit          String?
+}
+
+type AnalyticsPayments {
+  addedTax          Int
+  amount            Json
+  amountBalance     Json
+  amountDue         Json
+  amountReceived    Json
+  cashier           String
+  cashierId         String
+  createdAt         Json
+  customerDiscount  Int?
+  diningOptionFee   Json?
+  discounts         Json
+  includedTax       Json?
+  paymentMode       String
+  payments          AnalyticsPaymentsPayments[]
+  posName           String
+  refId             String
+  refund            Boolean
+  seniorPwdDiscount Json
+  serviceFee        Json
+  vatAmount         Json?
+}
+
+type AnalyticsPaymentsPayments {
+  amount      Int
+  name        String
+  paymentType String
+  refNo       String?
+}
+
+type AnalyticsShiftees {
+  endShift   Json
+  posName    String
+  sales      Json
+  shiftee    String
+  startShift Json
+}
+
+type AnalyticsTimeEntries {
+  datetime   Json
+  employeeId String
+  isTimeIn   Boolean
 }
